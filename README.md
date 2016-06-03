@@ -1,5 +1,5 @@
-[![Issue Stats](http://issuestats.com/github/TahaHachana/DexiSharp/badge/issue)](http://issuestats.com/github/fsprojects/ProjectScaffold)
-[![PR Stats](http://issuestats.com/github/TahaHachana/DexiSharp/badge/pr)](http://issuestats.com/github/fsprojects/ProjectScaffold)
+[![Issue Stats](http://issuestats.com/github/TahaHachana/DexiSharp/badge/issue)](http://issuestats.com/github/TahaHachana/DexiSharp)
+[![PR Stats](http://issuestats.com/github/TahaHachana/DexiSharp/badge/pr)](http://issuestats.com/github/TahaHachana/DexiSharp)
 
 ## Maintainer(s)
 
