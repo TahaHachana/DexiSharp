@@ -1,0 +1,25 @@
+type project
+title
+    DexiSharp
+owners
+    Taha Hachana
+authors 
+    Taha Hachana
+projectUrl
+    http://github.com/TahaHachana/DexiSharp
+iconUrl
+    https://raw.githubusercontent.com/TahaHachana/DexiSharp/master/docs/files/img/logo.png
+licenseUrl
+    http://github.com/TahaHachana/DexiSharp/blob/master/LICENSE.txt
+requireLicenseAcceptance
+    false
+copyright
+    Copyright 2015
+tags
+    fsharp dexi
+summary
+    F# client library for dexi.io
+description
+    .NET client library for the dexi.io API
+
+
