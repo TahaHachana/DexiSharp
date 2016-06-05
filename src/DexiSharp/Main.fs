@@ -1,4 +1,4 @@
-namespace DexiAPI
+namespace DexiSharp
 
 open HttpClient
 open Newtonsoft.Json
@@ -30,7 +30,7 @@ module Helpers =
         |> withHeader (Custom {name = "X-DexiIO-Account"; value = accountId})
         |> withHeader (Accept "application/json")
         |> withHeader (ContentType "application/json")
-        |> getResponseBody
+        |> getResponseCode
 
     let baseUrl = """https://api.dexi.io/"""
 
@@ -119,7 +119,19 @@ type DexiClient(accountId, apiKey) =
         let url = Helpers.baseUrl + "executions/" + executionId
         Helpers.deleteRequest accessKey accountId url
 
+    /// <summary>Returns the results of an execution. It is advised that you use some method of streaming to parse the result and insert it into your data store of choice.</summary>
+    /// <param name="executionId">The UUID of the execution.</param>
+    /// <param name="Format">The output format. Valid values are json, csv, xml and scsv.</param>
+    member this.GetResult(executionId, ?Format) =
+        let format = defaultArg Format "json"
+        let url = "https://api.dexi.io/executions/" + executionId + "/result?format=" + format
+        getRequest' url
 
+    /// <summary></summary>
+    /// <param name=""></param>
+    member this.GetResultFile(executionId, fileId) =
+        let url = "https://api.dexi.io/executions/" + executionId + "/file/" + fileId
+        getRequest' url
 
 
     member this.GetExecutions(runId, ?Offset, ?Limit) =
@@ -134,10 +146,6 @@ type DexiClient(accountId, apiKey) =
              offset = x.offset
              totalRows = x.totalRows}
 
-    member this.GetResult(executionId, ?Format) =
-        let format = defaultArg Format "json"
-        let url = "https://api.dexi.io/executions/" + executionId + "/result?format=" + format
-        getRequest' url
 
 
 
