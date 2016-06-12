@@ -192,3 +192,4 @@ docs/content/release-notes.md
 docs/tools/FSharp.Formatting.svclog
 
 src/DexiSharp/Tests.fsx
+src/DexiSharp/Test.fsx
