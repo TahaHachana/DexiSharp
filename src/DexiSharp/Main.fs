@@ -22,7 +22,7 @@ module Helpers =
         |> withHeader (Custom {name = "X-DexiIO-Account"; value = accountId})
         |> withHeader (Accept "application/json")
         |> withHeader (ContentType "application/json")
-        |> getResponseBody
+//        |> getResponseBody
 
     let deleteRequest accessKey accountId url =
         createRequest Delete url
@@ -110,6 +110,7 @@ type DexiClient(accountId, apiKey) =
     member this.Get(executionId) =
         let url = Helpers.baseUrl + "executions/" + executionId
         getRequest' url
+        |> getResponseBody
         |> fun x -> JsonConvert.DeserializeObject<RawExecution>(x)
         |> Execution.FromRawExecution
 
@@ -125,32 +126,32 @@ type DexiClient(accountId, apiKey) =
     member this.GetResult(executionId, streamConsumer, ?Format) =
         let format = defaultArg Format "json"
         let url = "https://api.dexi.io/executions/" + executionId + "/result?format=" + format
-        createRequest Get url
-        |> withHeader (Custom {name = "X-DexiIO-Access"; value = accessKey})  
-        |> withHeader (Custom {name = "X-DexiIO-Account"; value = accountId})
-        |> withHeader (Accept "application/json")
-        |> withHeader (ContentType "application/json")
+        getRequest' url
+        |> getResponseStream(streamConsumer)
+
+    /// <summary>Get execution result file contents. Response headers includes the content-type of the file.</summary>
+    /// <param name="executionId">UUID of the execution.</param>
+    /// <param name="fileId">UUID of the file.</param>
+    member this.GetResultFile(executionId, fileId, streamConsumer) =
+        let url = "https://api.dexi.io/executions/" + executionId + "/file/" + fileId
+        getRequest' url
         |> getResponseStream(streamConsumer)
 
 
-    /// <summary></summary>
-    /// <param name=""></param>
-    member this.GetResultFile(executionId, fileId) =
-        let url = "https://api.dexi.io/executions/" + executionId + "/file/" + fileId
-        getRequest' url
 
 
-    member this.GetExecutions(runId, ?Offset, ?Limit) =
-        let offset = defaultArg Offset 0
-        let limit = defaultArg Limit 30
-        let url = Helpers.baseUrl + "runs/" + runId + "/executions?offset=" + string offset + "&limit="+ string limit
-        getRequest' url
-        |> fun x -> JsonConvert.DeserializeObject<RawExecutionResult>(x)
-        |> fun x ->
-            let executions = x.rows |> Array.map Execution.FromRawExecution
-            {rows = executions
-             offset = x.offset
-             totalRows = x.totalRows}
+//    member this.GetExecutions(runId, ?Offset, ?Limit) =
+//        let offset = defaultArg Offset 0
+//        let limit = defaultArg Limit 30
+//        let url = Helpers.baseUrl + "runs/" + runId + "/executions?offset=" + string offset + "&limit="+ string limit
+//        getRequest' url
+//        |> getResponseBody
+//        |> fun x -> JsonConvert.DeserializeObject<RawExecutionResult>(x)
+//        |> fun x ->
+//            let executions = x.rows |> Array.map Execution.FromRawExecution
+//            {rows = executions
+//             offset = x.offset
+//             totalRows = x.totalRows}
 
 
 
