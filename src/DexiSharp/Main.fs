@@ -24,6 +24,13 @@ module Helpers =
         |> withHeader (ContentType "application/json")
 //        |> getResponseBody
 
+    let postRequest accessKey accountId url =
+        createRequest Post url
+        |> withHeader (Custom {name = "X-DexiIO-Access"; value = accessKey})  
+        |> withHeader (Custom {name = "X-DexiIO-Account"; value = accountId})
+        |> withHeader (Accept "application/json")
+        |> withHeader (ContentType "application/json")
+
     let deleteRequest accessKey accountId url =
         createRequest Delete url
         |> withHeader (Custom {name = "X-DexiIO-Access"; value = accessKey})  
@@ -104,6 +111,7 @@ type DexiClient(accountId, apiKey) =
     let accessKey = Helpers.md5 <| accountId + apiKey
     
     let getRequest' = Helpers.getRequest accessKey accountId
+    let postRequest' = Helpers.postRequest accessKey accountId
 
     /// <summary>Fetches information about the state of an execution.</summary>
     /// <param name="executionId">The UUID of the execution.</param>
@@ -136,6 +144,16 @@ type DexiClient(accountId, apiKey) =
         let url = "https://api.dexi.io/executions/" + executionId + "/file/" + fileId
         getRequest' url
         |> getResponseStream(streamConsumer)
+
+    /// <summary>Stop execution. Note that an execution does not stop immediately.</summary>
+    /// <param name="executionId">The UUID of the execution.</param>
+    member this.Stop(executionId) =
+        let url = Helpers.baseUrl + "executions/" + executionId + "/stop"
+        postRequest' url
+        |> getResponseCode
+
+
+
 
 
 
